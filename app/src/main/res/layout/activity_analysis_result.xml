@@ -1,23 +1,41 @@
 <!-- res/layout/activity_analysis_result.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AnalysisResultActivity">
 
-    <TextView
-        android:id="@+id/resultTextView"
+    <include layout="@layout/app_toolbar"
+        android:id="@+id/app_toolbar"/>
+    <include layout="@layout/bottom_nav_bar"
+        android:id="@+id/bottom_nav_bar"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_toolbar"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_bar">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:background="#EEEEEE"/>
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/resultTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#EEEEEE"
+            android:scaleType="centerCrop" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

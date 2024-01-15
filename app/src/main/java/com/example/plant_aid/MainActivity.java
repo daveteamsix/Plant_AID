@@ -14,6 +14,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Set up bottom navigation
+        NavigationHelper.setupBottomNavigation(this, R.id.home_nav_bar);
+
         // Set click listeners for the icons
         ImageView cameraIcon = findViewById(R.id.cameraIcon);
         ImageView myGardenIcon = findViewById(R.id.myGardenIcon);
@@ -25,12 +28,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        myGardenIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMyGardenActivity();
-            }
-        });
     }
 
     private void openCameraActivity() {
@@ -38,9 +35,5 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void openMyGardenActivity() {
-        // Replace MyGardenActivity.class with your actual activity for past analysis responses
-        Intent intent = new Intent(this, MyGardenActivity.class);
-        startActivity(intent);
-    }
+
 }

@@ -144,7 +144,7 @@ public class CameraActivity extends AppCompatActivity {
 
         // Create the request with our backend URL
         Request request = new Request.Builder()
-                .url("localhost:3000/describeImage")
+                .url("https://localhost:3000/describeImage")
                 .post(requestBody)
                 .build();
 

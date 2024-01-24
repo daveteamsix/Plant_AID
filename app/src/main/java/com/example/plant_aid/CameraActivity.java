@@ -67,11 +67,12 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        NavigationHelper.setupBottomNavigation(this, R.id.home_nav_bar);
         Log.d("CameraActivity", "onCreate called");
 
         Log.d("CameraActivity", "Before initializing textureView");
         textureView = findViewById(R.id.textureView);
-        Log.d("CameraActivity", "After initializing textureView");
+
 
 
         // Initialize the executor for camera operations

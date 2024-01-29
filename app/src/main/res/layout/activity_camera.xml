@@ -50,45 +50,4 @@
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-<!--<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".CameraActivity">
 
-    &lt;!&ndash; Include the App Toolbar &ndash;&gt;
-    <include
-        android:id="@+id/app_toolbar"
-        layout="@layout/app_toolbar" />
-
-    &lt;!&ndash; TextureView for camera preview &ndash;&gt;
-    <TextureView
-        android:id="@+id/textureView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_nav_bar" />
-
-    &lt;!&ndash; Button to capture image &ndash;&gt;
-    <Button
-        android:id="@+id/captureButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:insetTop="20dp"
-        android:insetBottom="90dp"
-        android:text=" Capture " />
-
-    &lt;!&ndash; Include the Bottom Navigation Bar &ndash;&gt;
-    <include
-        android:id="@+id/bottom_nav_bar"
-        layout="@layout/bottom_nav_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
-
-</RelativeLayout>-->

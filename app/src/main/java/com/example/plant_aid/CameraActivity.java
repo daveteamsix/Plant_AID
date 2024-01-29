@@ -2,7 +2,9 @@ package com.example.plant_aid;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,13 +30,20 @@ import androidx.core.content.ContextCompat;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -60,6 +69,11 @@ public class CameraActivity extends AppCompatActivity {
 
     private ImageCapture imageCapture;
 
+    private ArrayList<String> imagePaths;
+
+    // Declare SharedPreferences object
+    private SharedPreferences sharedPreferences;
+
     // boolean flag to check if ImageCapture has been initialized
     private boolean isImageCaptureInitialized = false;
 
@@ -67,6 +81,10 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences("MyGardenPrefs", Context.MODE_PRIVATE);
+
         NavigationHelper.setupBottomNavigation(this, R.id.home_nav_bar);
         Log.d("CameraActivity", "onCreate called");
 
@@ -156,6 +174,17 @@ public class CameraActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
                 showSnackbar("Failed to send image for analysis.");
+
+                // For testing
+                String result = "This is a test result";
+               // displayAnalysisResult(result, imageFile);
+
+                //update MyGarden Activity with the new image
+                String imagePath = imageFile.getAbsolutePath();
+                updateMyGarden(imagePath, result);
+
+                openAnalysisResult(imagePath);
+
             }
 
             @Override
@@ -164,26 +193,106 @@ public class CameraActivity extends AppCompatActivity {
                     try {
                         // Extract the analysis result from the response JSON
                         String result = Objects.requireNonNull(response.body()).string();
+
                         Log.d(TAG, "Analysis Result: " + result);
 
+                        //update MyGarden Activity with the new image
+                        String imagePath = imageFile.getAbsolutePath();
+                        updateMyGarden(imagePath, result);
                         // Display the result and image in a new activity or dialog
                         displayAnalysisResult(result, imageFile);
+
                     } catch (IOException e) {
                         e.printStackTrace();
                         showSnackbar("Error parsing analysis result.");
+
                     }
                 } else {
                     showSnackbar("Error: " + response.code());
+
+                    // For testing
+                    String result = "This is a test result";
+                    displayAnalysisResult(result, imageFile);
                 }
             }
         });
+
     }
+
+
+ private void updateMyGarden(String imagePath, String analysisResult){
+        String filename = "analysis_" + getFileNameFromPath(imagePath) + ".txt";
+        File analysisFile = new File(getFilesDir(), filename);
+        try{
+            FileWriter writer = new FileWriter(analysisFile);
+            writer.write(analysisResult);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        saveImagePathToPrefs(imagePath);
+        saveAnalysisResultToPrefs(imagePath, analysisFile.getAbsolutePath());
+ }
+
+ // method to open the MyGardenActivity
+    private void openMyGarden() {
+        Intent intent = new Intent(this, MyGardenActivity.class);
+        startActivity(intent);
+    }
+
+
+
+    private String getFileNameFromPath(String imagePath) {
+        File file = new File(imagePath);
+        return file.getName();
+    }
+
+    //update MyGarden Activity with the new image
+    private void saveImagePathToPrefs(String imagePath) {
+        Set<String> imagePathSet = sharedPreferences.getStringSet("imagePaths", new HashSet<>());
+        imagePathSet.add(imagePath);
+        sharedPreferences.edit().putStringSet("imagePaths", imagePathSet).apply();
+    }
+
+    private void saveAnalysisResultToPrefs(String imagePath, String analysisResultFilePath) {
+        sharedPreferences.edit().putString(imagePath, analysisResultFilePath).apply();
+    }
+
     public void displayAnalysisResult(String result, File imageFile) {
         Intent intent = new Intent(this, AnalysisResultActivity.class);
         intent.putExtra("result", result);
         intent.putExtra("imagePath", imageFile.getAbsolutePath());
         startActivity(intent);
     }
+
+    private void openAnalysisResult(String selectedImagePath) {
+        String analysisResultFilePath = sharedPreferences.getString(selectedImagePath, "");
+        String analysisResult = readAnalysisResultFromFile(analysisResultFilePath);
+
+        // Start AnalysisResultActivity with the selected image path and analysis result
+        Intent intent = new Intent(this, AnalysisResultActivity.class);
+        intent.putExtra("imagePath", selectedImagePath);
+        intent.putExtra("analysisResult", analysisResultFilePath);
+        startActivity(intent);
+    }
+
+    private String readAnalysisResultFromFile(String filePath) {
+        StringBuilder result = new StringBuilder();
+        try {
+            FileInputStream fis = new FileInputStream(filePath);
+            InputStreamReader inputStreamReader = new InputStreamReader(fis);
+            BufferedReader reader = new BufferedReader(inputStreamReader);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result.toString();
+    }
+
 
     private void showSnackbar(String message) {
         runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
@@ -317,7 +426,8 @@ public class CameraActivity extends AppCompatActivity {
             if (allPermissionsGranted()) {
                 startCamera();
             } else {
-                // Display a toast message if some permissions are not granted
+                // display a toast message that permission were not granted
+
             }
         }
     }

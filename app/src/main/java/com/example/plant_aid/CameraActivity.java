@@ -8,16 +8,23 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
@@ -97,8 +104,10 @@ public class CameraActivity extends AppCompatActivity {
         cameraExecutor = Executors.newSingleThreadExecutor();
 
         // Set up the capture button and its click listener
-        Button captureButton = findViewById(R.id.captureButton);
-        captureButton.setOnClickListener(v -> captureImage());
+        ImageButton captureButton = findViewById(R.id.captureButton);
+        captureButton.setOnClickListener(v -> {
+            captureButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_small_big));
+            captureImage();});
 
         // Check camera permissions and start the camera if granted, otherwise request permissions
         if (allPermissionsGranted()) {
@@ -127,6 +136,9 @@ public class CameraActivity extends AppCompatActivity {
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                 // Get the saved image file
                 File savedImageFile = new File(Objects.requireNonNull(Objects.requireNonNull(outputFileResults.getSavedUri()).getPath()));
+
+                // rotate the image
+                rotateImage(savedImageFile.getAbsolutePath(), 90);
 
                 // Process and send the image
                 processAndSendImage(savedImageFile.getAbsolutePath());
@@ -176,12 +188,16 @@ public class CameraActivity extends AppCompatActivity {
                 showSnackbar("Failed to send image for analysis.");
 
                 // For testing
+                // getting date
+                Date date = new Date();
+                date.getTime();
+
                 String result = "This is a test result";
                // displayAnalysisResult(result, imageFile);
 
                 //update MyGarden Activity with the new image
                 String imagePath = imageFile.getAbsolutePath();
-                updateMyGarden(imagePath, result);
+                updateMyGarden(imagePath, date.toString() + " " + result);
 
                 openAnalysisResult(imagePath);
 
@@ -470,6 +486,37 @@ public class CameraActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    private void rotateImage(String imagePath, float degrees) {
+        // Load the captured image
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+
+        // Create a matrix for the rotation transformation
+        Matrix matrix = new Matrix();
+
+        // Set the rotation angle
+        matrix.postRotate(degrees);
+
+        // Apply the rotation to the bitmap
+        Bitmap rotatedBitmap = Bitmap.createBitmap(
+                bitmap,
+                0, 0,
+                bitmap.getWidth(), bitmap.getHeight(),
+                matrix, true);
+
+        // Save the rotated bitmap back to the image file
+        saveBitmapToFile(rotatedBitmap, imagePath);
+    }
+
+    private void saveBitmapToFile(Bitmap bitmap, String filePath) {
+        File file = new File(filePath);
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     //  method to shut down the camera executor when the activity is destroyed
     @Override

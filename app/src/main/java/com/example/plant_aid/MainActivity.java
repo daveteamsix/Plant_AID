@@ -23,26 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("MyGardenPrefs", Context.MODE_PRIVATE);
-
-        // Set click listeners for the icons
-        ImageView cameraIcon = findViewById(R.id.cameraIcon);
-        ImageView myGardenIcon = findViewById(R.id.myGardenIcon);
-
-
-        cameraIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openCameraActivity();
-            }
-        });
-
-        myGardenIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openMyGardenActivity();
-            }
-        });
-
     }
 
     private void openCameraActivity() {

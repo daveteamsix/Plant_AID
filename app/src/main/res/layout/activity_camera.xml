@@ -8,20 +8,12 @@
     android:layout_height="match_parent"
     tools:context=".CameraActivity">
 
-    <!-- Include the App Toolbar -->
-    <include
-        android:id="@+id/app_toolbar"
-        layout="@layout/app_toolbar" />
-
 
 
     <!-- Include the Bottom Navigation Bar -->
     <include
         android:id="@+id/bottom_nav_bar"
-        layout="@layout/bottom_nav_bar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        layout="@layout/bottom_nav_bar" /> <!-- Nav bar not included -->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,23 +23,22 @@
         <TextureView
             android:id="@+id/textureView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"/>
 
-        <!-- Button to capture image -->
-        <Button
+
+
+        <ImageButton
             android:id="@+id/captureButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp"
-            android:insetBottom="80dp"
-            android:text=" Capture "
-            app:rippleColor="#4CAF50" />
-
+            android:layout_marginBottom="90dp"
+            android:src="@drawable/camera_aperture"
+            android:background="@android:color/transparent"/>
 
 
     </RelativeLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 

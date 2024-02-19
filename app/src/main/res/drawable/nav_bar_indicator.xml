@@ -1,0 +1,23 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <layer-list>
+            <!-- Outer Circle (Filled) -->
+            <item android:gravity="center">
+                <shape android:shape="oval">
+                    <size android:height="40dp"
+                        android:width="80dp"/>
+                    <solid android:color="@color/black" />
+                </shape>
+            </item>
+
+            <!-- Inner Circle (Transparent, creating a ring effect) -->
+            <item android:gravity="center">
+                <shape android:shape="oval">
+                    <size android:height="76dp"
+                    android:width="76dp" />
+                    <solid android:color="@color/mygreen" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

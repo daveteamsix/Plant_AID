@@ -92,11 +92,18 @@ public class CameraActivity extends AppCompatActivity {
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("MyGardenPrefs", Context.MODE_PRIVATE);
 
-        NavigationHelper.setupBottomNavigation(this, R.id.home_nav_bar);
+        NavigationHelper.setupBottomNavigation(this, R.id.camera_nav_bar);
         Log.d("CameraActivity", "onCreate called");
 
         Log.d("CameraActivity", "Before initializing textureView");
         textureView = findViewById(R.id.textureView);
+/*
+        int screanWidth = getResources().getDisplayMetrics().widthPixels;
+        int textureViewHeight = (int) (screanWidth * 4/3);
+        ViewGroup.LayoutParams layoutParams = textureView.getLayoutParams();
+        layoutParams.height = textureViewHeight;
+        textureView.setLayoutParams(layoutParams);
+*/
 
 
 
@@ -107,6 +114,7 @@ public class CameraActivity extends AppCompatActivity {
         ImageButton captureButton = findViewById(R.id.captureButton);
         captureButton.setOnClickListener(v -> {
             captureButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_small_big));
+            findViewById(R.id.whiteOval).startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_white_oval));
             captureImage();});
 
         // Check camera permissions and start the camera if granted, otherwise request permissions

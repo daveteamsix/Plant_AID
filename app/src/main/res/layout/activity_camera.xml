@@ -10,10 +10,7 @@
 
 
 
-    <!-- Include the Bottom Navigation Bar -->
-    <include
-        android:id="@+id/bottom_nav_bar"
-        layout="@layout/bottom_nav_bar" /> <!-- Nav bar not included -->
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,7 +21,7 @@
             android:id="@+id/textureView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter" />
 
 
 
@@ -38,7 +35,22 @@
             android:src="@drawable/camera_aperture"
             android:background="@android:color/transparent"/>
 
+        <ImageView
+            android:id="@+id/whiteOval"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignTop="@+id/captureButton"
 
+            android:layout_alignBottom="@+id/captureButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="37dp"
+            android:layout_marginBottom="38dp"
+            android:background="@drawable/white_oval"
+            android:visibility="invisible" />
     </RelativeLayout>
+    <!-- Include the Bottom Navigation Bar -->
+    <include
+        android:id="@+id/bottom_nav_bar"
+        layout="@layout/bottom_nav_bar"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

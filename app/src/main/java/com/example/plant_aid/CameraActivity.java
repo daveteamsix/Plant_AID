@@ -175,19 +175,23 @@ public class CameraActivity extends AppCompatActivity {
 
     private void sendImageToServer(File imageFile) {
         // Create a request body with the image file
+        String filename = imageFile.getName();
+
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("file", "image.jpg", RequestBody.create(MediaType.parse("image/jpeg"), imageFile))
+                .addFormDataPart("image", filename, RequestBody.create(MediaType.parse("image/jpeg"), imageFile))
                 .build();
 
         // Create the request with our backend URL
         Request request = new Request.Builder()
-                .url("https://localhost:3000/describeImage")
+                .url("http://localhost:3000/analysePlantImage")
                 .post(requestBody)
                 .build();
 
         // Execute the request
         OkHttpClient client = new OkHttpClient();
+
+        Log.d(TAG, "Sending image to server: " + request.url());
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -198,7 +202,6 @@ public class CameraActivity extends AppCompatActivity {
                 // getting date
                 Date date = new Date();
                 date.getTime();
-
                 String result = "This is a test result";
                // displayAnalysisResult(result, imageFile);
 
@@ -223,7 +226,7 @@ public class CameraActivity extends AppCompatActivity {
                         String imagePath = imageFile.getAbsolutePath();
                         updateMyGarden(imagePath, result);
                         // Display the result and image in a new activity or dialog
-                        displayAnalysisResult(result, imageFile);
+                        openAnalysisResult(imagePath);
 
                     } catch (IOException e) {
                         e.printStackTrace();

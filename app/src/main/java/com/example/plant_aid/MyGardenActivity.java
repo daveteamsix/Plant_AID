@@ -1,32 +1,28 @@
 package com.example.plant_aid;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.plant_aid.myGardenHelper.GardenRecyclerAdapter;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-
 public class MyGardenActivity extends AppCompatActivity {
 
-    private ListView gardenListView;
-    private ImageListAdapter imageListAdapter;
+    private RecyclerView gardenRecyclerView;
+    private GardenRecyclerAdapter recyclerAdapter;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -36,21 +32,23 @@ public class MyGardenActivity extends AppCompatActivity {
 
         NavigationHelper.setupBottomNavigation(this, R.id.my_garden_nav_bar);
 
-        gardenListView = findViewById(R.id.gardenListView);
+        gardenRecyclerView = findViewById(R.id.gardenRecyclerView);
+        gardenRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("MyGardenPrefs", Context.MODE_PRIVATE);
 
         // Initialize the custom adapter
         ArrayList<String> imagePaths = getImagePathsFromPrefs();
-        imageListAdapter = new ImageListAdapter(this, imagePaths, sharedPreferences);
-        gardenListView.setAdapter(imageListAdapter);
+        recyclerAdapter = new GardenRecyclerAdapter(this, imagePaths, sharedPreferences);
 
         // Set a click listener for the images in the list
-        gardenListView.setOnItemClickListener((adapterView, view, position, id) -> {
-            String selectedImagePath = (String) imageListAdapter.getItem(position);
+        recyclerAdapter.setOnItemClickListener(position -> {
+            String selectedImagePath = imagePaths.get(position);
             openAnalysisResult(selectedImagePath);
         });
+
+        gardenRecyclerView.setAdapter(recyclerAdapter);
     }
 
     private ArrayList<String> getImagePathsFromPrefs() {
@@ -86,6 +84,7 @@ public class MyGardenActivity extends AppCompatActivity {
         return result.toString();
     }
 }
+
 /*public class MyGardenActivity extends AppCompatActivity {
 
     private ListView gardenListView;

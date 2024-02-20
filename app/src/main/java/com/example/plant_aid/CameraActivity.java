@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Rational;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
@@ -97,13 +98,11 @@ public class CameraActivity extends AppCompatActivity {
 
         Log.d("CameraActivity", "Before initializing textureView");
         textureView = findViewById(R.id.textureView);
-/*
         int screanWidth = getResources().getDisplayMetrics().widthPixels;
         int textureViewHeight = (int) (screanWidth * 4/3);
         ViewGroup.LayoutParams layoutParams = textureView.getLayoutParams();
         layoutParams.height = textureViewHeight;
         textureView.setLayoutParams(layoutParams);
-*/
 
 
 
@@ -404,7 +403,17 @@ public class CameraActivity extends AppCompatActivity {
 
     // Method to bind the camera preview to the TextureView
     private void bindPreviewAndImageCapture(ProcessCameraProvider cameraProvider) {
-        Preview preview = new Preview.Builder().build();
+
+        int viewWidth = textureView.getWidth();
+        int viewHeight = textureView.getHeight();
+
+        Rational aspectRatio = new Rational(viewWidth, viewHeight);
+
+        Size targetResolution = new Size(textureView.getWidth(), textureView.getHeight());
+        
+
+        Preview preview = new Preview.Builder().setTargetResolution(targetResolution).build();
+
 
         // Setup ImageCapture use case
         imageCapture = new ImageCapture.Builder()

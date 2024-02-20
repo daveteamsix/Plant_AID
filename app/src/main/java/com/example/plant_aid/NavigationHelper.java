@@ -27,7 +27,9 @@ public class NavigationHelper {
         }
 
         // Set the selected item after setting up the listener
-        bottomNavigationView.setSelectedItemId(selectedItemId);
+        if (currentActivity.getClass() != AnalysisResultActivity.class) {
+            bottomNavigationView.setSelectedItemId(selectedItemId);
+        }
     }
 
     private static void handleFabClick(AppCompatActivity currentActivity, BottomNavigationView bottomNavigationView) {

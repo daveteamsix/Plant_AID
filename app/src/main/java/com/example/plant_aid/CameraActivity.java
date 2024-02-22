@@ -184,7 +184,7 @@ public class CameraActivity extends AppCompatActivity {
 
         // Create the request with our backend URL
         Request request = new Request.Builder()
-                .url("http://localhost:3000/analysePlantImage")
+                .url("http://10.0.2.2:3000/analysePlantImage")
                 .post(requestBody)
                 .build();
 
@@ -237,7 +237,7 @@ public class CameraActivity extends AppCompatActivity {
                     showSnackbar("Error: " + response.code());
 
                     // For testing
-                    String result = "This is a test result";
+                    String result = "Response was not successful.";
                     displayAnalysisResult(result, imageFile);
                 }
             }
@@ -334,6 +334,59 @@ public class CameraActivity extends AppCompatActivity {
         // Load the captured image
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
 
+        // Define the maximum width and height
+        int maxWidth = 600;
+        int maxHeight = 800;
+
+        // Get the original dimensions of the image
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        // Calculate the aspect ratio
+        float aspectRatio = (float) width / height;
+
+        // Calculate new width and height to fit within the maximum dimensions while maintaining aspect ratio
+        int newWidth = width;
+        int newHeight = height;
+        if (width > maxWidth || height > maxHeight) {
+            if (aspectRatio > 1) {
+                newWidth = maxWidth;
+                newHeight = (int) (maxWidth / aspectRatio);
+            } else {
+                newHeight = maxHeight;
+                newWidth = (int) (maxHeight * aspectRatio);
+            }
+        }
+
+        // Resize the bitmap
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+
+        // Create a new file to save the processed image
+        String processedImagePath = getOutputDirectory() + File.separator + "processed_" + generateFileName() + ".jpg";
+        File processedImageFile = new File(processedImagePath);
+
+        try {
+            // Save the processed image to the new file
+            FileOutputStream fos = new FileOutputStream(processedImageFile);
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // Recycle the original and resized bitmaps to release memory
+            bitmap.recycle();
+            resizedBitmap.recycle();
+        }
+
+        // Return the processed image file
+        return processedImageFile;
+    }
+
+    /*private File preprocessImage(String imagePath) {
+        // Load the captured image
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+
         // Check the original size of the image
         long originalSize = calculateFileSize(imagePath);
 
@@ -371,7 +424,7 @@ public class CameraActivity extends AppCompatActivity {
 
         // Return the processed image file
         return processedImageFile;
-    }
+    }*/
 
     private long calculateFileSize(String filePath) {
         File file = new File(filePath);

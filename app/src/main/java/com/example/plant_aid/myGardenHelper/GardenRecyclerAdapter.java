@@ -1,5 +1,7 @@
 package com.example.plant_aid.myGardenHelper;
 
+import static android.content.Intent.getIntent;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -14,6 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.plant_aid.R;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 
@@ -45,20 +51,41 @@ public class GardenRecyclerAdapter extends RecyclerView.Adapter<GardenRecyclerAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String imagePath = imagePaths.get(position);
+
         Glide.with(context)
                 .load(imagePath)
                 .placeholder(R.drawable.placeholder_image)
                 .centerCrop()
                 .into(holder.imageView);
 
+
+        String analysisResultFilePath = sharedPreferences.getString(imagePath, "");
+        String analysisResult = readAnalysisResultFromFile(analysisResultFilePath);
+        holder.textView.setText(analysisResult);
         // Set any additional information about the item
-        holder.textView.setText("Description /TODO");
+        //holder.textView.setText("Description /TODO");
 
         holder.itemView.setOnClickListener(view -> {
             if (onitemClickListener != null) {
                 onitemClickListener.onItemClick(position);
             }
         });
+    }
+    private String readAnalysisResultFromFile(String filePath) {
+        StringBuilder result = new StringBuilder();
+        try {
+            FileInputStream fis = new FileInputStream(filePath);
+            InputStreamReader inputStreamReader = new InputStreamReader(fis);
+            BufferedReader reader = new BufferedReader(inputStreamReader);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result.toString();
     }
 
     @Override

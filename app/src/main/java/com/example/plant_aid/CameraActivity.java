@@ -184,7 +184,7 @@ public class CameraActivity extends AppCompatActivity {
 
         // Create the request with our backend URL
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:3000/analysePlantImage")
+                .url("http://192.168.0.19:3000/analysePlantImage") // IP address of the backend server
                 .post(requestBody)
                 .build();
 
@@ -335,8 +335,8 @@ public class CameraActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
 
         // Define the maximum width and height
-        int maxWidth = 600;
-        int maxHeight = 800;
+        int maxWidth = 800;
+        int maxHeight = 600;
 
         // Get the original dimensions of the image
         int width = bitmap.getWidth();

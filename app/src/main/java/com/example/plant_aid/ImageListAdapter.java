@@ -36,7 +36,8 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Set;
 
-
+/**This class was originally implemented but a different approach was later chosen. It was kept for reference purposes
+ */
 public class ImageListAdapter extends BaseAdapter {
 
     private Context context;

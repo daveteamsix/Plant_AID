@@ -22,6 +22,15 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav_bar">
 
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#EEEEEE"
+            android:scaleType="centerCrop" />
+
+
+
         <TextView
             android:id="@+id/resultTextView"
             android:layout_width="match_parent"
@@ -30,12 +39,6 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="#EEEEEE"
-            android:scaleType="centerCrop" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
